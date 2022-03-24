@@ -22,6 +22,22 @@ class Message(BaseModel):
     last_used: datetime.datetime
 
 
+def option_todo(id): 
+    return '', 204 
+ 
+
+app.add_url_rule('/', view_func=option_todo, provide_automatic_options=False, methods=['OPTIONS']) 
+app.add_url_rule(r'/<path:path>', view_func=option_todo, provide_automatic_options=False, methods=['OPTIONS']) 
+
+
+@app.after_request
+def after_request(response):
+    response.headers['Access-Control-Allow-Methods']='*'
+    response.headers['Access-Control-Allow-Origin']='*'
+    response.headers['Vary']='Origin'
+    return response
+
+
 def run_tick():
     active_message = main_table.get('active_message')
     if not active_message and len(list(messages_table.keys())) > 0:
